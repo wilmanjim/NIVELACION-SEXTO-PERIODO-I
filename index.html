@@ -1,0 +1,336 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Talleres de Matemáticas - Números Naturales</title>
+    <style>
+        body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; background: #f0f4f8; padding: 20px; color: #333; }
+        .container { max-width: 900px; margin: 0 auto; background: white; padding: 30px; border-radius: 15px; box-shadow: 0 5px 20px rgba(0,0,0,0.1); }
+        
+        /* Estilos del Mensaje Motivacional */
+        .alert-box {
+            background: #fff3cd;
+            border-left: 6px solid #ffc107;
+            padding: 20px;
+            margin-bottom: 25px;
+            border-radius: 5px;
+            color: #856404;
+        }
+        .alert-box h3 { margin-top: 0; color: #d35400; }
+        .alert-box p { margin: 10px 0; font-size: 1.1em; }
+        .highlight { font-weight: bold; color: #c0392b; }
+
+        /* Pestañas */
+        .tabs { display: flex; gap: 10px; margin-bottom: 20px; flex-wrap: wrap; }
+        .tab-btn {
+            flex: 1; padding: 15px; border: none; background: #e0e0e0;
+            cursor: pointer; font-size: 16px; font-weight: bold; border-radius: 8px;
+            transition: 0.3s; min-width: 120px;
+        }
+        .tab-btn:hover { background: #d0d0d0; }
+        .tab-btn.active { background: #3498db; color: white; transform: scale(1.05); }
+
+        /* Contenido de los talleres */
+        .workshop-content { display: none; }
+        .workshop-content.active { display: block; animation: fadeIn 0.5s; }
+        
+        @keyframes fadeIn { from { opacity: 0; } to { opacity: 1; } }
+
+        .problem-row {
+            display: flex; justify-content: space-between; align-items: center;
+            padding: 12px; border-bottom: 1px solid #eee;
+        }
+        .problem-row:nth-child(even) { background-color: #f9f9f9; }
+        .problem-row.hard { border-left: 5px solid #e74c3c; background-color: #fff5f5; }
+        
+        .q-text { font-size: 1.2em; font-weight: 600; flex: 1; }
+        .q-input { 
+            width: 100px; padding: 8px; font-size: 1.1em; text-align: center; 
+            border: 2px solid #ccc; border-radius: 5px; margin: 0 15px;
+        }
+        .q-input:focus { border-color: #3498db; outline: none; }
+        
+        .feedback { width: 150px; font-weight: bold; text-align: right; }
+        .correct { color: #27ae60; }
+        .incorrect { color: #c0392b; }
+
+        .btn-check {
+            display: block; width: 100%; padding: 15px; margin-top: 20px;
+            background: #27ae60; color: white; border: none; font-size: 1.2em;
+            font-weight: bold; border-radius: 8px; cursor: pointer;
+        }
+        .btn-check:hover { background: #219150; }
+
+        .result-msg { text-align: center; margin-top: 20px; font-size: 1.3em; font-weight: bold; padding: 15px; border-radius: 8px; display: none; }
+    </style>
+</head>
+<body>
+
+<div class="container">
+    <h1 style="text-align: center; color: #2c3e50;">📚 TALLER DE REFUERZO: NÚMEROS NATURALES</h1>
+
+    <!-- MENSAJE MOTIVACIONAL -->
+    <div class="alert-box">
+        <h3>⚠️ ATENCIÓN ESTUDIANTE</h3>
+        <p>Si no estudiaste y no prestaste atención como debías en clase, <span class="highlight">ahora te toca trabajar en la casa</span> lo que has dejado de realizar en el colegio.</p>
+        <p>¿Quieres que te quede más tiempo libre para jugar y salir con amigos? <span class="highlight">¡PON DE TU PARTE!</span></p>
+        <p>Estudia, concéntrate y resuelve estos ejercicios. La matemática es práctica: si no practicas, no aprendes. ¡Demuestra de qué eres capaz!</p>
+    </div>
+
+    <!-- BOTONES DE NAVEGACIÓN -->
+    <div class="tabs">
+        <button class="tab-btn active" onclick="showTab('suma')">➕ SUMA</button>
+        <button class="tab-btn" onclick="showTab('resta')">➖ RESTA</button>
+        <button class="tab-btn" onclick="showTab('multi')">✖️ MULTIPLICACIÓN</button>
+        <button class="tab-btn" onclick="showTab('divi')">➗ DIVISIÓN</button>
+    </div>
+
+    <!-- TALLER SUMA -->
+    <div id="suma" class="workshop-content active">
+        <h2>Taller de Sumas (Progresivo)</h2>
+        <p><em>Empieza con cifras pequeñas y termina con operaciones de 8 cifras.</em></p>
+        <div id="lista-suma"></div>
+        <button class="btn-check" onclick="verificar('suma')">✅ VERIFICAR RESPUESTAS DE SUMA</button>
+        <div id="res-suma" class="result-msg"></div>
+    </div>
+
+    <!-- TALLER RESTA -->
+    <div id="resta" class="workshop-content">
+        <h2>Taller de Restas (Progresivo)</h2>
+        <p><em>Cuidado con las llevadas. Los últimos son de 8 cifras.</em></p>
+        <div id="lista-resta"></div>
+        <button class="btn-check" onclick="verificar('resta')">✅ VERIFICAR RESPUESTAS DE RESTA</button>
+        <div id="res-resta" class="result-msg"></div>
+    </div>
+
+    <!-- TALLER MULTIPLICACIÓN -->
+    <div id="multi" class="workshop-content">
+        <h2>Taller de Multiplicaciones</h2>
+        <p><em>Desde tablas básicas hasta multiplicaciones de 4 cifras.</em></p>
+        <div id="lista-multi"></div>
+        <button class="btn-check" onclick="verificar('multi')">✅ VERIFICAR RESPUESTAS DE MULTIPLICACIÓN</button>
+        <div id="res-multi" class="result-msg"></div>
+    </div>
+
+    <!-- TALLER DIVISIÓN -->
+    <div id="divi" class="workshop-content">
+        <h2>Taller de Divisiones Exactas</h2>
+        <p><em>Divisiones exactas. Empieza fácil y termina con divisores de 2 y 3 cifras.</em></p>
+        <div id="lista-divi"></div>
+        <button class="btn-check" onclick="verificar('divi')">✅ VERIFICAR RESPUESTAS DE DIVISIÓN</button>
+        <div id="res-divi" class="result-msg"></div>
+    </div>
+
+</div>
+
+<script>
+    // --- GENERADORES DE PROBLEMAS ---
+
+    function generarSumas() {
+        let html = '';
+        // 1-5: 1 y 2 cifras
+        for(let i=1; i<=5; i++) {
+            let a = Math.floor(Math.random() * 90) + 10;
+            let b = Math.floor(Math.random() * 90) + 10;
+            html += crearFila(i, `${a} + ${b}`, a+b, false);
+        }
+        // 6-10: 3 y 4 cifras
+        for(let i=6; i<=10; i++) {
+            let a = Math.floor(Math.random() * 9000) + 1000;
+            let b = Math.floor(Math.random() * 9000) + 1000;
+            html += crearFila(i, `${a} + ${b}`, a+b, false);
+        }
+        // 11-15: 5, 6 y 7 cifras
+        for(let i=11; i<=15; i++) {
+            let a = Math.floor(Math.random() * 9000000) + 1000000;
+            let b = Math.floor(Math.random() * 9000000) + 1000000;
+            html += crearFila(i, `${a.toLocaleString()} + ${b.toLocaleString()}`, a+b, false);
+        }
+        // 16-20: 8 CIFRAS (DIFÍCILES)
+        for(let i=16; i<=20; i++) {
+            let a = Math.floor(Math.random() * 90000000) + 10000000;
+            let b = Math.floor(Math.random() * 90000000) + 10000000;
+            html += crearFila(i, `${a.toLocaleString()} + ${b.toLocaleString()}`, a+b, true);
+        }
+        document.getElementById('lista-suma').innerHTML = html;
+    }
+
+    function generarRestas() {
+        let html = '';
+        // 1-5: 2 y 3 cifras
+        for(let i=1; i<=5; i++) {
+            let a = Math.floor(Math.random() * 900) + 100;
+            let b = Math.floor(Math.random() * (a-10)) + 10;
+            html += crearFila(i, `${a} - ${b}`, a-b, false);
+        }
+        // 6-10: 4 y 5 cifras
+        for(let i=6; i<=10; i++) {
+            let a = Math.floor(Math.random() * 90000) + 10000;
+            let b = Math.floor(Math.random() * (a-1000)) + 1000;
+            html += crearFila(i, `${a} - ${b}`, a-b, false);
+        }
+        // 11-15: 6 y 7 cifras
+        for(let i=11; i<=15; i++) {
+            let a = Math.floor(Math.random() * 9000000) + 1000000;
+            let b = Math.floor(Math.random() * (a-100000)) + 100000;
+            html += crearFila(i, `${a.toLocaleString()} - ${b.toLocaleString()}`, a-b, false);
+        }
+        // 16-20: 8 CIFRAS (DIFÍCILES)
+        for(let i=16; i<=20; i++) {
+            let a = Math.floor(Math.random() * 90000000) + 10000000;
+            let b = Math.floor(Math.random() * (a-1000000)) + 1000000;
+            html += crearFila(i, `${a.toLocaleString()} - ${b.toLocaleString()}`, a-b, true);
+        }
+        document.getElementById('lista-resta').innerHTML = html;
+    }
+
+    function generarMultiplicaciones() {
+        let html = '';
+        // 1-5: 1 cifra x 1 cifra y 2 cifras
+        for(let i=1; i<=5; i++) {
+            let a = Math.floor(Math.random() * 9) + 2;
+            let b = Math.floor(Math.random() * 90) + 10;
+            html += crearFila(i, `${b} × ${a}`, a*b, false);
+        }
+        // 6-10: 2 cifras x 2 cifras
+        for(let i=6; i<=10; i++) {
+            let a = Math.floor(Math.random() * 90) + 10;
+            let b = Math.floor(Math.random() * 90) + 10;
+            html += crearFila(i, `${a} × ${b}`, a*b, false);
+        }
+        // 11-15: 3 cifras x 2 cifras
+        for(let i=11; i<=15; i++) {
+            let a = Math.floor(Math.random() * 900) + 100;
+            let b = Math.floor(Math.random() * 90) + 10;
+            html += crearFila(i, `${a} × ${b}`, a*b, false);
+        }
+        // 16-20: 4 CIFRAS (DIFÍCILES)
+        for(let i=16; i<=20; i++) {
+            let a = Math.floor(Math.random() * 9000) + 1000;
+            let b = Math.floor(Math.random() * 900) + 100;
+            html += crearFila(i, `${a.toLocaleString()} × ${b.toLocaleString()}`, a*b, true);
+        }
+        document.getElementById('lista-multi').innerHTML = html;
+    }
+
+    function generarDivisiones() {
+        let html = '';
+        // 1-5: Dividendo 2 cifras / Divisor 1 cifra
+        for(let i=1; i<=5; i++) {
+            let divisor = Math.floor(Math.random() * 8) + 2; // 2 a 9
+            let cociente = Math.floor(Math.random() * 9) + 2; // 2 a 10
+            let dividendo = divisor * cociente;
+            html += crearFila(i, `${dividendo} ÷ ${divisor}`, cociente, false);
+        }
+        // 6-10: Dividendo 3 cifras / Divisor 1 cifra
+        for(let i=6; i<=10; i++) {
+            let divisor = Math.floor(Math.random() * 8) + 2;
+            let cociente = Math.floor(Math.random() * 90) + 10;
+            let dividendo = divisor * cociente;
+            html += crearFila(i, `${dividendo} ÷ ${divisor}`, cociente, false);
+        }
+        // 11-15: Dividendo 3 cifras / Divisor 2 cifras
+        for(let i=11; i<=15; i++) {
+            let divisor = Math.floor(Math.random() * 80) + 10; // 10 a 89
+            let cociente = Math.floor(Math.random() * 9) + 2; // Para que de 3 cifras
+            let dividendo = divisor * cociente;
+            // Ajuste por si acaso sale de 2 cifras
+            if(dividendo < 100) { cociente = 10; dividendo = divisor * 10; }
+            html += crearFila(i, `${dividendo} ÷ ${divisor}`, cociente, false);
+        }
+        // 16-20: Dividendo 3 cifras / Divisor 2-3 cifras (DIFÍCILES)
+        for(let i=16; i<=20; i++) {
+            let divisor = Math.floor(Math.random() * 800) + 100; // 100 a 899
+            let cociente = Math.floor(Math.random() * 8) + 2; 
+            let dividendo = divisor * cociente;
+             // Ajuste estricto para 3 cifras en dividendo
+            while(dividendo > 999) {
+                cociente = Math.floor(Math.random() * 5) + 1;
+                dividendo = divisor * cociente;
+            }
+            html += crearFila(i, `${dividendo} ÷ ${divisor}`, cociente, true);
+        }
+        document.getElementById('lista-divi').innerHTML = html;
+    }
+
+    // --- FUNCIONES AUXILIARES ---
+
+    function crearFila(num, texto, respuesta, esDificil) {
+        let claseDificil = esDificil ? 'hard' : '';
+        let icono = esDificil ? '🔴 ' : '';
+        return `
+        <div class="problem-row ${claseDificil}">
+            <div class="q-text">${icono} ${num}. ${texto} = </div>
+            <input type="number" class="q-input" id="inp-${num}" placeholder="?">
+            <div class="feedback" id="fb-${num}"></div>
+            <input type="hidden" id="ans-${num}" value="${respuesta}">
+        </div>`;
+    }
+
+    function showTab(tabId) {
+        // Ocultar todos
+        document.querySelectorAll('.workshop-content').forEach(el => el.classList.remove('active'));
+        document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+        
+        // Mostrar seleccionado
+        document.getElementById(tabId).classList.add('active');
+        event.target.classList.add('active');
+    }
+
+    function verificar(tipo) {
+        let correctas = 0;
+        let total = 20;
+        
+        for(let i=1; i<=20; i++) {
+            let input = document.getElementById(`inp-${i}`);
+            let feedback = document.getElementById(`fb-${i}`);
+            let respuestaCorrecta = parseFloat(document.getElementById(`ans-${i}`).value);
+            let respuestaUsuario = parseFloat(input.value);
+
+            if(respuestaUsuario === respuestaCorrecta) {
+                feedback.innerHTML = "¡Correcto! ✓";
+                feedback.className = "feedback correct";
+                input.style.borderColor = "#27ae60";
+                input.style.backgroundColor = "#e8f8f5";
+                correctas++;
+            } else {
+                feedback.innerHTML = `Mal. Era: ${respuestaCorrecta}`;
+                feedback.className = "feedback incorrect";
+                input.style.borderColor = "#c0392b";
+                input.style.backgroundColor = "#fdedec";
+            }
+        }
+
+        let msgDiv = document.getElementById(`res-${tipo}`);
+        msgDiv.style.display = 'block';
+        
+        if(correctas === 20) {
+            msgDiv.innerHTML = `🏆 ¡EXCELENTE! ${correctas}/20. Has demostrado que sí puedes cuando te esfuerzas.`;
+            msgDiv.style.background = "#d4edda";
+            msgDiv.style.color = "#155724";
+        } else if (correctas >= 15) {
+            msgDiv.innerHTML = `👍 ¡MUY BIEN! ${correctas}/20. Casi perfecto, repasa los errores.`;
+            msgDiv.style.background = "#fff3cd";
+            msgDiv.style.color = "#856404";
+        } else {
+            msgDiv.innerHTML = `⚠️ ATENCIÓN: ${correctas}/20. Necesitas estudiar más. No te rindas, vuelve a intentarlo.`;
+            msgDiv.style.background = "#f8d7da";
+            msgDiv.style.color = "#721c24";
+        }
+        
+        msgDiv.scrollIntoView({behavior: "smooth"});
+    }
+
+    // --- INICIALIZAR AL CARGAR ---
+    window.onload = function() {
+        generarSumas();
+        generarRestas();
+        generarMultiplicaciones();
+        generarDivisiones();
+    };
+
+</script>
+
+</body>
+</html>
